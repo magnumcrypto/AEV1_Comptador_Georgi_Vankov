@@ -9,81 +9,94 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.pmdm.ieseljust.comptador.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
     private var comptador = 0
-    /*override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "Al mètode onStart") // TAG és una etiqueta prèviament definida
-    }*/
+    private val TAG = "MainActivityTag"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        setContentView(R.layout.activity_main)
+        //inicializar el objeto binding inflando la vista
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Referencia al TextView
-        val textViewContador = findViewById<TextView>(R.id.textViewComptador)
-        // Referencia al boto d'Open
-        val btnSubtract = findViewById<Button>(R.id.btSubtract)
-        // Referencia al boton de Reet
-        val btnReset = findViewById<Button>(R.id.btReset)
-        // Referencia al botón
-        val btAdd = findViewById<Button>(R.id.btAdd)
-        // Referencia al boton de Open
-        val btnOpen = findViewById<Button>(R.id.btOpen)
+        //inicializar el TextView con el valor inicial del contador
+        binding.textViewComptador.text = comptador.toString()
 
-        // Inicialitzem el TextView amb el comptador a 0
-        textViewContador.text =
-            comptador.toString() // Estem fent una assignacio directament o accedinta algun metode?
-
-
-        //Evento para el boton Open para lanzar el Intent
-        btnOpen.setOnClickListener {
+        //configuramos los listeners para los botones usando ViewBinding
+        binding.btOpen.setOnClickListener {
             val intent = Intent(baseContext, MostraComptadorActivity::class.java)
             intent.putExtra("comptador", comptador)
             startActivity(intent)
         }
-
-        // Asociaciamos una expresióin lambda como
-        // respuesta (callback) al evento Clic sobre
-        // el botón
-        btAdd.setOnClickListener {
+        //boton sumar
+        binding.btAdd.setOnClickListener {
             comptador++
-            textViewContador.text = comptador.toString()
+            binding.textViewComptador.text = comptador.toString()
         }
-
-        btnSubtract.setOnClickListener {
+        //boton restar
+        binding.btSubtract.setOnClickListener {
             comptador--
-            textViewContador.text = comptador.toString()
+            binding.textViewComptador.text = comptador.toString()
         }
-
-        btnReset.setOnClickListener {
+        //boton resetear
+        binding.btReset.setOnClickListener {
             comptador = 0
-            textViewContador.text = comptador.toString()
+            binding.textViewComptador.text = comptador.toString()
         }
 
-        /*btOpen.setOnClickListener{
-            val intent = Intent(baseContext, MostraComptadorActivity::class.java)
-            intent.putExtra("comptador", comptador)
-            startActivity(intent)
-        }*/
+    }
 
-        /*btOpen.setOnClickListener {
-            Intent(baseContext, MostraComptadorActivity::class.java).apply {
-                putExtra("comptador", comptador)
-                startActivity(this)
-            }
-        }*/
+    override fun onStart() {
+        super.onStart()
+        Log.d(this.TAG, "Metodo onStart")
+    }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d(this.TAG, "Metodo onResume")
+    }
 
+    override fun onPause() {
+        super.onPause()
+        Log.d(this.TAG, "Metodo onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(this.TAG, "Metodo onStop")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(this.TAG, "Metodo onRestart")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(this.TAG, "Metodo onDestroy")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("comptador", comptador)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        comptador = savedInstanceState.getInt("comptador")
+        binding.textViewComptador.text = comptador.toString()
     }
 }
